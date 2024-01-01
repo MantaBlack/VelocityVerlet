@@ -32,3 +32,54 @@ void STVV::SingleThreadedVelocityVerlet::compute_forces()
 		}
 	}
 }
+
+void STVV::SingleThreadedVelocityVerlet::update_positions()
+{
+	for (size_t i = 0; i < m_num_particles; ++i)
+	{
+		float acceleration = m_time_step * 0.5f / m_masses[i];
+
+		sf::Vector3f move;
+
+		move.x = m_time_step * (m_velocities[i].x + acceleration * m_new_forces[i].x);
+		move.y = m_time_step * (m_velocities[i].y + acceleration * m_new_forces[i].y);
+		move.z = m_time_step * (m_velocities[i].z + acceleration * m_new_forces[i].z);
+
+		m_positions[i] += move;
+
+		m_old_forces[i] = m_new_forces[i];
+	}
+}
+
+void STVV::SingleThreadedVelocityVerlet::update_velocities()
+{
+	for (size_t i = 0; i < m_num_particles; ++i)
+	{
+		float acceleration = m_time_step * 0.5f / m_masses[i];
+
+		sf::Vector3f delta;
+		
+		delta.x = acceleration * (m_new_forces[i].x + m_old_forces[i].x);
+		delta.y = acceleration * (m_new_forces[i].y + m_old_forces[i].y);
+		delta.z = acceleration * (m_new_forces[i].z + m_old_forces[i].z);
+
+		m_velocities[i] += delta;
+	}
+}
+
+std::vector<sf::Vertex> STVV::SingleThreadedVelocityVerlet::run()
+{
+	compute_forces();
+	update_positions();
+	compute_forces();
+	update_velocities();
+
+	std::vector<sf::Vertex> vertices(m_num_particles);
+
+	for (size_t i = 0; i < m_num_particles; ++i)
+	{
+		vertices[i] = sf::Vertex(sf::Vector2f(m_positions[i].x, m_positions[i].y));
+	}
+
+	return vertices;
+}

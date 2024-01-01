@@ -1,0 +1,1 @@
+// sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;freetype.lib;gdi32.lib

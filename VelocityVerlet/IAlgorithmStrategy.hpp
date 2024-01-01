@@ -2,7 +2,7 @@
 #define IALGORITHM_STRATEGY_HPP_
 
 #include <SFML/Graphics.hpp>
-#include <SFML/System/Vector3.hpp>
+
 #include <vector>
 
 class IAlgorithmStrategy
@@ -10,7 +10,7 @@ class IAlgorithmStrategy
 public:
 	virtual ~IAlgorithmStrategy() = default;
 
-	virtual std::vector<sf::Vector3f> run() const = 0;
+	virtual std::vector<sf::Vertex> run() = 0;
 };
 
 #endif // !IALGORITHMSTRATEGY

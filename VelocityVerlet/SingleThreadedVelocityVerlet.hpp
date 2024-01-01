@@ -25,7 +25,7 @@ namespace STVV
 			m_new_forces(m_num_particles, sf::Vector3f(0.f, 0.f, 0.f))
 		{}
 
-		std::vector<sf::Vector3f> run() const override;
+		std::vector<sf::Vertex> run() override;
 
 	private:
 		void compute_forces();
