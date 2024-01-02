@@ -132,10 +132,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SingleThreadedVelocityVerlet.cpp" />
+    <ClCompile Include="VelocityVerletIntegrator.cpp" />
     <ClCompile Include="VertexBufferRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IAlgorithmStrategy.hpp" />
+    <ClInclude Include="IRenderStrategy.hpp" />
+    <ClInclude Include="VelocityVerletIntegrator.hpp" />
     <ClInclude Include="VertexBufferRenderer.hpp" />
     <ClInclude Include="SingleThreadedVelocityVerlet.hpp" />
   </ItemGroup>

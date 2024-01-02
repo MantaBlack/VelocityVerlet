@@ -1,6 +1,12 @@
 #include "VertexBufferRenderer.hpp"
 
 #include <string>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 
 void VertexBufferRenderer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -29,4 +35,9 @@ void VertexBufferRenderer::update(std::vector<sf::Vertex> vertices)
 			throw "Failed to update vertex buffer";
 		}
 	}
+}
+
+const sf::Drawable& VertexBufferRenderer::get_frame() const
+{
+	return m_vertex_buffer;
 }

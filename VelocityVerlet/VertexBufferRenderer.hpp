@@ -1,10 +1,12 @@
 #ifndef VERTEX_BUFFER_RENDERER_HPP_
 #define VERTEX_BUFFER_RENDERER_HPP_
 
+#include "IRenderStrategy.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-class VertexBufferRenderer : public sf::Drawable, public sf::Transformable
+class VertexBufferRenderer : public sf::Drawable, public sf::Transformable, public IRenderStrategy
 {
 private:
 	std::vector<sf::Vertex> m_vertices;
@@ -29,7 +31,9 @@ public:
 		m_vertex_buffer.create(0);
 	}
 
-	void update(std::vector<sf::Vertex> vertices);
+	void update(std::vector<sf::Vertex> vertices) override;
+
+	const sf::Drawable& get_frame() const override;
 };
 
 #endif // !VERTEX_BUFFER_RENDERER_HPP_
