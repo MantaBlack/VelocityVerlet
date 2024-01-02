@@ -7,7 +7,7 @@ static float square(float val)
 	return val * val;
 }
 
-void STVV::SingleThreadedVelocityVerlet::compute_forces()
+void SingleThreadedVelocityVerlet::compute_forces()
 {
 	std::fill(m_new_forces.begin(), m_new_forces.end(), sf::Vector3f(0.f, 0.f, 0.f));
 
@@ -33,7 +33,7 @@ void STVV::SingleThreadedVelocityVerlet::compute_forces()
 	}
 }
 
-void STVV::SingleThreadedVelocityVerlet::update_positions()
+void SingleThreadedVelocityVerlet::update_positions()
 {
 	for (size_t i = 0; i < m_num_particles; ++i)
 	{
@@ -51,7 +51,7 @@ void STVV::SingleThreadedVelocityVerlet::update_positions()
 	}
 }
 
-void STVV::SingleThreadedVelocityVerlet::update_velocities()
+void SingleThreadedVelocityVerlet::update_velocities()
 {
 	for (size_t i = 0; i < m_num_particles; ++i)
 	{
@@ -67,7 +67,7 @@ void STVV::SingleThreadedVelocityVerlet::update_velocities()
 	}
 }
 
-std::vector<sf::Vertex> STVV::SingleThreadedVelocityVerlet::run()
+std::vector<sf::Vertex> SingleThreadedVelocityVerlet::run()
 {
 	compute_forces();
 	update_positions();

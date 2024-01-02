@@ -132,9 +132,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SingleThreadedVelocityVerlet.cpp" />
+    <ClCompile Include="VertexBufferRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IAlgorithmStrategy.hpp" />
+    <ClInclude Include="VertexBufferRenderer.hpp" />
     <ClInclude Include="SingleThreadedVelocityVerlet.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

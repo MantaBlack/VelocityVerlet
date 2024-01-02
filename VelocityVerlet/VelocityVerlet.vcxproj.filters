@@ -21,12 +21,18 @@
     <ClCompile Include="SingleThreadedVelocityVerlet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VertexBufferRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IAlgorithmStrategy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SingleThreadedVelocityVerlet.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBufferRenderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
