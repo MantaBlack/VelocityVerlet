@@ -11,7 +11,7 @@ void SingleThreadedVelocityVerlet::compute_forces()
 {
 	std::fill(m_new_forces.begin(), m_new_forces.end(), sf::Vector3f(0.f, 0.f, 0.f));
 
-	for (size_t me = 0; me < m_num_particles; ++me)
+	for (size_t me = 0; me < m_num_particles - 1; ++me)
 	{
 		for (size_t other = me + 1; other < m_num_particles; ++other)
 		{

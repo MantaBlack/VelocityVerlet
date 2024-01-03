@@ -10,7 +10,7 @@
 
 void VelocityVerletIntegrator::validate_inputs()
 {
-	if (m_algorithm.get() == nullptr)
+	/*if (m_algorithm.get() == nullptr)
 	{
 		throw "Failed to run integrator. Algorithm is not set.";
 	}
@@ -18,17 +18,17 @@ void VelocityVerletIntegrator::validate_inputs()
 	if (m_renderer.get() == nullptr)
 	{
 		throw "Failed to run integrator. Renderer is not set.";
-	}
+	}*/
 }
 
-void VelocityVerletIntegrator::set_algorithm(std::unique_ptr<IAlgorithmStrategy>&& algorithm)
+void VelocityVerletIntegrator::set_algorithm(IAlgorithmStrategy& algorithm)
 {
-	m_algorithm = std::move(algorithm);
+	m_algorithm = algorithm;
 }
 
-void VelocityVerletIntegrator::set_renderer(std::unique_ptr<IRenderStrategy>&& renderer)
+void VelocityVerletIntegrator::set_renderer(IRenderStrategy& renderer)
 {
-	m_renderer = std::move(renderer);
+	m_renderer = renderer;
 }
 
 void VelocityVerletIntegrator::execute()
@@ -64,13 +64,13 @@ void VelocityVerletIntegrator::execute()
 		sf::Clock timer;
 
 		// run the Velocity Verlet implementation to create the vertices
-		std::vector<sf::Vertex> vertices = m_algorithm.get()->run();
+		std::vector<sf::Vertex> vertices = m_algorithm.run();
 
 		// update the renderer with the vertices
-		m_renderer.get()->update(vertices);
+		m_renderer.update(vertices);
 
 		// render the vertices
-		window.draw(m_renderer.get()->get_frame());
+		window.draw(m_renderer.get_frame());
 
 		sf::Time duration = timer.restart();
 

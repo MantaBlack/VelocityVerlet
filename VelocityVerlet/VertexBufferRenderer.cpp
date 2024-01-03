@@ -8,15 +8,6 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-void VertexBufferRenderer::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	states.transform *= getTransform();
-
-	states.texture = NULL;
-
-	target.draw(m_vertex_buffer, states);
-}
-
 void VertexBufferRenderer::update(std::vector<sf::Vertex> vertices)
 {
 	if (m_vertex_buffer.getVertexCount() == vertices.size())
@@ -25,6 +16,7 @@ void VertexBufferRenderer::update(std::vector<sf::Vertex> vertices)
 	}
 	else
 	{
+		// first frame is gonna suck if creation takes noticeable time
 		if (!m_vertex_buffer.create(vertices.size()))
 		{
 			throw "Failed to create vertex buffer. Vertex count: " + std::to_string(vertices.size());
