@@ -1,4 +1,4 @@
-__kernel void computeForces(__global float4* forces,
+__kernel void compute_forces(__global float4* forces,
 							__global float4* currPos,
 							__local float4* posCache)
 {
@@ -39,7 +39,7 @@ __kernel void computeForces(__global float4* forces,
 	forces[gid] = force;
 }
 
-__kernel void updatePositions(__global float4* forces,
+__kernel void update_positions(__global float4* forces,
 							  __global float4* currPos,
 							  __global float4* newPos,
 							  __global float4* currVel,
@@ -69,7 +69,7 @@ __kernel void updatePositions(__global float4* forces,
 	newPos[gid] = myPos;
 }
 
-__kernel void updateVelocities(__global float4* oldForces,
+__kernel void update_velocities(__global float4* oldForces,
 							   __global float4* newForces,
 							   __global float4* currVel,
 							   float timeStep)
@@ -103,7 +103,7 @@ __kernel void updateVelocities(__global float4* oldForces,
 
 
 
-__kernel void computeForcesNC(__global float4* forces,
+__kernel void compute_forces_NC(__global float4* forces,
 							  __global float4* currPos)
 {
 	uint gid          = get_global_id(0);

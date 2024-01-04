@@ -421,6 +421,16 @@ void SingleGPUVelocityVerlet::initialize()
 	{
 		throw std::string("Failed to setup input data");
 	}
+
+	if (!setup_buffers())
+	{
+		throw std::string("Failed to setup buffers");
+	}
+
+	if (!setup_kernels())
+	{
+		throw std::string("Failed to setup kernels");
+	}
 }
 
 std::vector<sf::Vertex> SingleGPUVelocityVerlet::run()
