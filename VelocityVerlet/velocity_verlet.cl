@@ -1,6 +1,6 @@
 __kernel void compute_forces(__global float4* forces,
-							__global float4* currPos,
-							__local float4* posCache)
+							 __global float4* currPos,
+							 __local float4* posCache)
 {
 	//FLOPS : 2 * numWorkItems * numParticles * 12
 
@@ -39,11 +39,11 @@ __kernel void compute_forces(__global float4* forces,
 	forces[gid] = force;
 }
 
-__kernel void update_positions(__global float4* forces,
-							  __global float4* currPos,
-							  __global float4* newPos,
-							  __global float4* currVel,
-							  float timeStep)
+__kernel void compute_positions(__global float4* forces,
+							    __global float4* currPos,
+							    __global float4* newPos,
+							    __global float4* currVel,
+							    float timeStep)
 {
 	//FLOPS : numWorkItems * 6
 
@@ -69,10 +69,10 @@ __kernel void update_positions(__global float4* forces,
 	newPos[gid] = myPos;
 }
 
-__kernel void update_velocities(__global float4* oldForces,
-							   __global float4* newForces,
-							   __global float4* currVel,
-							   float timeStep)
+__kernel void compute_velocities(__global float4* oldForces,
+						         __global float4* newForces,
+							     __global float4* currVel,
+							     float timeStep)
 {
 	//FLOPS : numWorkItems * 5
 
