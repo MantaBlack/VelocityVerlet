@@ -4,6 +4,7 @@
 #include "VertexBufferRenderer.hpp"
 
 #include <iostream>
+#include <locale>
 #include <random>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -19,6 +20,19 @@
 
 static std::random_device g_random_device;
 static std::mt19937 g_random_engine(g_random_device());
+
+struct space_out : std::numpunct<char>
+{
+	char do_thousands_sep() const
+	{
+		return ' ';
+	}
+
+	std::string do_grouping() const
+	{
+		return "\03";
+	}
+};
 
 static std::vector<sf::Vector3f> generate_starting_positions(const std::size_t num_particles,
 	const float min_val,
@@ -76,6 +90,8 @@ static std::vector<float> generate_masses(const std::size_t num_particles,
 
 int main()
 {
+	std::cout.imbue(std::locale(std::cout.getloc(), new space_out));
+
 	const std::size_t window_width = 1000;
 	const std::size_t window_height = 1000;
 	const std::string window_title = "Velocity Verlet";

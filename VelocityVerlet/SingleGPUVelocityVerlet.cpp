@@ -377,7 +377,7 @@ void SingleGPUVelocityVerlet::initialize()
 
 	if (setup_platform())
 	{
-		std::cout << "Platform setup is OK" << std::endl;
+		std::cout << std::endl << "Platform setup is OK" << std::endl;
 		std::cout << "Platform name   : " << m_platform_name << std::endl;
 		std::cout << "Platform vendor : " << m_platform_vendor << std::endl;
 	}
@@ -393,12 +393,33 @@ void SingleGPUVelocityVerlet::initialize()
 
 	if (setup_device())
 	{
-		std::cout << "Device setup is OK" << std::endl;
+		std::cout << std::endl << "Device setup is OK" << std::endl;
 		std::cout << "Device name : " << m_device_name.value() << std::endl;
 	}
 	else
 	{
 		throw std::string("Failed to setup context");
+	}
+
+	if (!setup_program())
+	{
+		throw std::string("Failed to setup program");
+	}
+
+	if (!setup_command_queue())
+	{
+		throw std::string("Failed to setup command queue");
+	}
+
+	if (setup_input_data())
+	{
+		std::cout << std::endl << "Input data setup is OK" << std::endl;
+		std::cout << "# particles         : " << m_num_particles << std::endl;
+		std::cout << "Buffer size (Bytes) : " << m_buffer_size_bytes << std::endl;
+	}
+	else
+	{
+		throw std::string("Failed to setup input data");
 	}
 }
 

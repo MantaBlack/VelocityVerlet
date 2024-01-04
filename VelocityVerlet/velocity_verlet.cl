@@ -24,9 +24,6 @@ __kernel void computeForces(__global float4* forces,
 		{
 			float4 otherPos = posCache[q];
 
-			//make sure the other particle is not me.
-			//if (gid != otherIdx)
-
 			float4 diff   = otherPos - myPos;
 			float sqrDist = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
 			float gravity = myPos.s3 * otherPos.s3 / (sqrt(sqrDist) * sqrDist);
