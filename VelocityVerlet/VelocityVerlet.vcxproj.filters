@@ -54,4 +54,7 @@
   <ItemGroup>
     <Font Include="saxmono.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="velocity_verlet.cl" />
+  </ItemGroup>
 </Project>

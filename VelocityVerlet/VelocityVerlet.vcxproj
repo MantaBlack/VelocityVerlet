@@ -152,6 +152,9 @@
   <ItemGroup>
     <Font Include="saxmono.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="velocity_verlet.cl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
