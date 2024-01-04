@@ -1,5 +1,6 @@
-#include "VelocityVerletIntegrator.hpp"
+#include "SingleGPUVelocityVerlet.hpp"
 #include "SingleThreadedVelocityVerlet.hpp"
+#include "VelocityVerletIntegrator.hpp"
 #include "VertexBufferRenderer.hpp"
 
 #include <iostream>
@@ -14,6 +15,7 @@
 #pragma comment(lib, "sfml-system-d.lib")
 #pragma comment(lib, "freetype.lib")
 #pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "OpenCL.lib")
 
 static std::random_device g_random_device;
 static std::mt19937 g_random_engine(g_random_device());
@@ -92,22 +94,38 @@ int main()
 		throw std::string("Failed to load font file");
 	}
 
-	SingleThreadedVelocityVerlet algorithm(num_particles,
+	SingleThreadedVelocityVerlet cpu_algorithm(num_particles,
 		time_step,
 		positions,
 		velocities,
 		masses);
 
-	VertexBufferRenderer renderer(sf::VertexBuffer::Stream, sf::Points);
+	VertexBufferRenderer cpu_renderer(sf::VertexBuffer::Stream, sf::Points);
 
-	VelocityVerletIntegrator integrator(algorithm,
-		renderer,
+	VelocityVerletIntegrator cpu_integrator(cpu_algorithm,
+		cpu_renderer,
 		window_width,
 		window_height,
 		window_title,
 		font);
 
-	integrator.execute();
+	//cpu_integrator.execute();
+
+	SingleGPUVelocityVerlet gpu_algorithm(num_particles,
+		time_step,
+		positions,
+		velocities,
+		masses);
+
+	try
+	{
+		gpu_algorithm.initialize();
+	}
+	catch (const std::string& e)
+	{
+		std::cout << e << std::endl;
+		return 1;
+	}
 
 	return 0;
 }
