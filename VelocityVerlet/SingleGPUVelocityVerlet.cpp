@@ -170,8 +170,6 @@ bool SingleGPUVelocityVerlet::setup_input_data()
 		return false;
 	}
 
-	const std::size_t dims = 4;
-
 	for (std::size_t i = 0; i < m_num_particles; ++i)
 	{
 		// copy position values
@@ -214,6 +212,17 @@ bool SingleGPUVelocityVerlet::setup_buffers()
 			CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
 			m_buffer_size_bytes,
 			m_velocities);
+
+		// buffers for storing force values
+		m_forces_buffers[m_front_buffer_idx] = cl::Buffer(m_context,
+			CL_MEM_READ_WRITE,
+			m_buffer_size_bytes,
+			NULL);
+
+		m_forces_buffers[m_back_buffer_idx]  = cl::Buffer(m_context,
+			CL_MEM_READ_WRITE,
+			m_buffer_size_bytes,
+			NULL);
 
 		// output buffer for copying results from device (this should be a pinned buffer)
 		m_output_buffer = cl::Buffer(m_context, CL_MEM_USE_HOST_PTR, m_buffer_size_bytes, m_positions);
@@ -313,7 +322,7 @@ bool SingleGPUVelocityVerlet::queue_commands()
 				cl::NullRange,
 				cl::NDRange(m_total_workitems),
 				cl::NDRange(WORKGROUP_SIZE),
-				&force_event,
+				NULL,
 				&pos_event[0]);
 
 			// we don't wanna override the newly computed forces so we switch buffers
@@ -435,5 +444,23 @@ void SingleGPUVelocityVerlet::initialize()
 
 std::vector<sf::Vertex> SingleGPUVelocityVerlet::run()
 {
-	return std::vector<sf::Vertex>();
+	if (!queue_commands())
+	{
+		throw std::string("Failed to queue commands");
+	}
+
+	if (!update_kernel_arguments())
+	{
+		throw std::string("Failed to update kernel arguments");
+	}
+
+	std::vector<sf::Vertex> vertices(m_num_particles);
+
+	for (std::size_t i = 0; i < m_num_particles; ++i)
+	{
+		// copy position values
+		vertices[i] = sf::Vector2f(m_positions[i].s0, m_positions[i].s1);
+	}
+
+	return vertices;
 }

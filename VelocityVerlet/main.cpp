@@ -96,12 +96,12 @@ int main()
 	const std::size_t window_height = 1000;
 	const std::string window_title = "Velocity Verlet";
 
-	const std::size_t num_particles = 1000;
-	const float time_step = 1.f;
+	const std::size_t num_particles = 50000;
+	const float time_step = .01f;
 
-	std::vector<sf::Vector3f> positions = generate_starting_positions(num_particles, 100.f, 800.f);
+	std::vector<sf::Vector3f> positions = generate_starting_positions(num_particles, 0.f, 900.f);
 	std::vector<sf::Vector3f> velocities = generate_starting_velocities(num_particles, 1.f, 1.5f);
-	std::vector<float> masses = generate_masses(num_particles, 1.f, 50.f);
+	std::vector<float> masses = generate_masses(num_particles, 1.f, 50000.f);
 
 	sf::Font font;
 
@@ -110,22 +110,25 @@ int main()
 		throw std::string("Failed to load font file");
 	}
 
-	SingleThreadedVelocityVerlet cpu_algorithm(num_particles,
-		time_step,
-		positions,
-		velocities,
-		masses);
+	if (num_particles <= 1000)
+	{
+		SingleThreadedVelocityVerlet cpu_algorithm(num_particles,
+			time_step,
+			positions,
+			velocities,
+			masses);
 
-	VertexBufferRenderer cpu_renderer(sf::VertexBuffer::Stream, sf::Points);
+		VertexBufferRenderer cpu_renderer(sf::VertexBuffer::Stream, sf::Points);
 
-	VelocityVerletIntegrator cpu_integrator(cpu_algorithm,
-		cpu_renderer,
-		window_width,
-		window_height,
-		window_title,
-		font);
+		VelocityVerletIntegrator cpu_integrator(cpu_algorithm,
+			cpu_renderer,
+			window_width,
+			window_height,
+			window_title,
+			font);
 
-	//cpu_integrator.execute();
+		cpu_integrator.execute();
+	}
 
 	SingleGPUVelocityVerlet gpu_algorithm(num_particles,
 		time_step,
@@ -135,7 +138,17 @@ int main()
 
 	try
 	{
+		VertexBufferRenderer gpu_renderer(sf::VertexBuffer::Stream, sf::Points);
+
+		VelocityVerletIntegrator gpu_integrator(gpu_algorithm,
+			gpu_renderer,
+			window_width,
+			window_height,
+			window_title,
+			font);
+
 		gpu_algorithm.initialize();
+		gpu_integrator.execute();
 	}
 	catch (const std::string& e)
 	{
