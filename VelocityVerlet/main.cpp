@@ -83,7 +83,7 @@ int main()
 
 	std::vector<sf::Vector3f> positions = generate_starting_positions(num_particles, 100.f, 800.f);
 	std::vector<sf::Vector3f> velocities = generate_starting_velocities(num_particles, 1.f, 1.5f);
-	std::vector<float> masses = generate_masses(num_particles, 1.f, 50.f);	
+	std::vector<float> masses = generate_masses(num_particles, 1.f, 50.f);
 
 	sf::Font font;
 

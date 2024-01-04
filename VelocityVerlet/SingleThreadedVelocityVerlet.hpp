@@ -38,7 +38,9 @@ public:
 	{}
 
 	~SingleThreadedVelocityVerlet()
-	{ }
+	{}
+
+	void initialize() override;
 
 	std::vector<sf::Vertex> run() override;
 };

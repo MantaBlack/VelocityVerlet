@@ -10,6 +10,8 @@ class IAlgorithmStrategy
 public:
 	virtual ~IAlgorithmStrategy() = default;
 
+	virtual void initialize() = 0;
+
 	virtual std::vector<sf::Vertex> run() = 0;
 };
 

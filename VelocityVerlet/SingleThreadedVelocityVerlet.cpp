@@ -67,6 +67,10 @@ void SingleThreadedVelocityVerlet::update_velocities()
 	}
 }
 
+void SingleThreadedVelocityVerlet::initialize()
+{
+}
+
 std::vector<sf::Vertex> SingleThreadedVelocityVerlet::run()
 {
 	compute_forces();

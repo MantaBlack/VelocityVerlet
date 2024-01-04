@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(OPENCL_HEADERS);$(OPENCL_HPP_HEADERS);$(SFML_DIR)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCL_HEADERS);$(OPENCL_CPP_HEADERS);$(SFML_DIR)\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SingleGPUVelocityVerlet.cpp" />
     <ClCompile Include="SingleThreadedVelocityVerlet.cpp" />
     <ClCompile Include="VelocityVerletIntegrator.cpp" />
     <ClCompile Include="VertexBufferRenderer.cpp" />
@@ -142,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="IAlgorithmStrategy.hpp" />
     <ClInclude Include="IRenderStrategy.hpp" />
+    <ClInclude Include="SingleGPUVelocityVerlet.hpp" />
     <ClInclude Include="VelocityVerletIntegrator.hpp" />
     <ClInclude Include="VertexBufferRenderer.hpp" />
     <ClInclude Include="SingleThreadedVelocityVerlet.hpp" />
