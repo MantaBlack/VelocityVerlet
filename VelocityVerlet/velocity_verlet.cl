@@ -32,6 +32,10 @@ __kernel void compute_forces(__global float4* forces,
 			force = select(force + (gravity * diff), force, (uint4)gid == otherIdx);
 
 			++otherIdx;
+
+			/* TODO: we need to also update the opposite reaction force for the other
+			 * particle too. What is the optimal way to do this?
+			 */
 		}
 
 		barrier(CLK_LOCAL_MEM_FENCE);
