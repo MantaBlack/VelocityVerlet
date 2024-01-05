@@ -11,15 +11,14 @@ __kernel void compute_forces(__global float4* forces,
 
     //read position and mass for this particle where 4th component is the mass.
     float4 my_pos = curr_positions[gid];
-    float4 force = (float4)0.0f;
+    float3 force = (float3)0.0f;
 
     for (uint other = gid + 1; other < num_particles; ++other)
     {
         float4 other_position = curr_positions[other];
 
-        float4 diff           = other_position - my_pos;
-        float square_distance = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
-        float gravity         = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
+        float3 diff   = other_position.s012 - my_pos.s012;
+        float gravity = my_pos.s3 * other_position.s3 / (fast_length(diff) * dot(diff, diff));
 
         force += (gravity * diff);
     }
@@ -30,15 +29,14 @@ __kernel void compute_forces(__global float4* forces,
     {
         float4 other_position = curr_positions[other];
 
-        float4 diff           = my_pos - other_position;
-        float square_distance = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
-        float gravity         = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
+        float3 diff   = my_pos.s012 - other_position.s012;
+        float gravity = my_pos.s3 * other_position.s3 / (fast_length(diff) * dot(diff, diff));
 
-        force = select(force, force - (gravity * diff), (uint4)other < gid);
+        force = select(force, force - (gravity * diff), (uint3)other < gid);
     }
 
     //write forces so that we can use it later to update positions after syncing.
-    forces[gid] = force;
+    forces[gid] = (float4)(force, 0.f);
 }
 
 __kernel void compute_positions(__global float4* forces,
@@ -62,7 +60,7 @@ __kernel void compute_positions(__global float4* forces,
 
     //compute new position for this particle.
     float acc = time_step * 0.5f / my_mass;
-    my_pos = my_pos + time_step * (my_velocity + acc * my_force);
+    my_pos.s012 = my_pos.s012 + time_step * (my_velocity.s012 + acc * my_force.s012);
 
     //replace mass for this particle.
     my_pos.s3 = my_mass;
