@@ -1,6 +1,6 @@
 __kernel void compute_forces(__global float4* forces,
-							 __global float4* currPos,
-							 __local float4* posCache)
+	__global float4* currPos,
+	__local float4* posCache)
 {
 	//FLOPS : 2 * numWorkItems * numParticles * 12
 
@@ -27,7 +27,9 @@ __kernel void compute_forces(__global float4* forces,
 			float4 diff   = otherPos - myPos;
 			float sqrDist = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
 			float gravity = myPos.s3 * otherPos.s3 / (sqrt(sqrDist) * sqrDist);
-			force         = select(force + (gravity * diff), force, (uint4)gid == otherIdx);
+
+			// don't calcuate a force if the other particle is me
+			force = select(force + (gravity * diff), force, (uint4)gid == otherIdx);
 
 			++otherIdx;
 		}
@@ -40,10 +42,10 @@ __kernel void compute_forces(__global float4* forces,
 }
 
 __kernel void compute_positions(__global float4* forces,
-							    __global float4* currPos,
-							    __global float4* newPos,
-							    __global float4* currVel,
-							    float timeStep)
+	__global float4* currPos,
+	__global float4* newPos,
+	__global float4* currVel,
+	float timeStep)
 {
 	//FLOPS : numWorkItems * 6
 
@@ -70,9 +72,9 @@ __kernel void compute_positions(__global float4* forces,
 }
 
 __kernel void compute_velocities(__global float4* oldForces,
-						         __global float4* newForces,
-							     __global float4* currVel,
-							     float timeStep)
+	__global float4* newForces,
+	__global float4* currVel,
+	float timeStep)
 {
 	//FLOPS : numWorkItems * 5
 
@@ -103,8 +105,8 @@ __kernel void compute_velocities(__global float4* oldForces,
 
 
 
-__kernel void compute_forces_NC(__global float4* forces,
-							  __global float4* currPos)
+__kernel void compute_forces_no_cache(__global float4* forces,
+	__global float4* currPos)
 {
 	uint gid          = get_global_id(0);
 	uint lid          = get_local_id(0);
