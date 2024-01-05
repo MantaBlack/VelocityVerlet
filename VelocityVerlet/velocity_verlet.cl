@@ -1,43 +1,40 @@
 __kernel void compute_forces(__global float4* forces,
     __global float4* curr_positions,
-    __local float4* positions_cache)
+    __local float4* positions_cache,
+    __local float4* forces_cache)
 {
     //FLOPS : 2 * numWorkItems * num_particles * 12
 
-    uint gid           = get_global_id(0);
-    uint lid           = get_local_id(0);
-    uint local_size    = get_local_size(0);
+    uint gid = get_global_id(0);
+    uint lid = get_local_id(0);
+    uint local_size = get_local_size(0);
     uint num_particles = get_global_size(0);
-    uint other_idx     = 0;
+    uint other_idx = 0;
 
     //read position and mass for this particle where 4th component is the mass.
     float4 my_pos = curr_positions[gid];
-    float4 force = (float4) 0.0f;
+    float4 force = (float4)0.0f;
 
-    for (uint gidx = lid; gidx < num_particles; gidx += local_size)
+    for (uint other = gid + 1; other < num_particles; ++other)
     {
-        //cache position and mass for other particles.
-        positions_cache[lid] = curr_positions[gidx];
-        barrier(CLK_LOCAL_MEM_FENCE);
+        float4 other_position = curr_positions[other];
 
-        for (uint other_idx = 0; other_idx < local_size; ++other_idx)
-        {
-            float4 other_position = positions_cache[other_idx];
+        float4 diff           = other_position - my_pos;
+        float square_distance = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
+        float gravity         = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
 
-            float4 diff           = other_position - my_pos;
-            float square_distance = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
-            float gravity         = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
+        force += (gravity * diff);
+    }
 
-            // don't calcuate a force if the other particle is me
-            //force = select(force + (gravity * diff), force, (uint4)gid == other_idx);
-            force = select(force + (gravity * diff), force, (uint4)lid == other_idx);
+    for (uint other = gid; other > 0; --other)
+    {
+        float4 other_position = curr_positions[other];
 
-            /* TODO: we need to also update the opposite reaction force for the other
-             * particle too. What is the optimal way to do this?
-             */
-        }
+        float4 diff = my_pos - other_position;
+        float square_distance = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
+        float gravity = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
 
-        barrier(CLK_LOCAL_MEM_FENCE);
+        force = select(force, force - (gravity * diff), (uint4)other < gid);
     }
 
     //write forces so that we can use it later to update positions after syncing.

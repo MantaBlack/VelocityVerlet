@@ -247,6 +247,7 @@ bool SingleGPUVelocityVerlet::setup_kernels()
         m_force_kernel.setArg(0, m_forces_buffers[m_front_buffer_idx]);
         m_force_kernel.setArg(1, m_positions_buffers[m_front_buffer_idx]);
         m_force_kernel.setArg(2, WORKGROUP_SIZE * sizeof(cl_float4), NULL);
+        m_force_kernel.setArg(3, WORKGROUP_SIZE * sizeof(cl_float4), NULL);
 
         m_positions_kernel = cl::Kernel(m_program, POSITIONS_KERNEL_NAME.data());
 

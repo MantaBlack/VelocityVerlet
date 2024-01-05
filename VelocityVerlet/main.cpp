@@ -96,8 +96,8 @@ int main()
     const std::size_t window_height = 1000;
     const std::string window_title = "Velocity Verlet";
 
-    const std::size_t num_particles = 50000;
-    const float time_step = .01f;
+    const std::size_t num_particles = 1000;
+    const float time_step = .1f;
 
     std::vector<sf::Vector3f> positions = generate_starting_positions(num_particles, 0.f, 900.f);
     std::vector<sf::Vector3f> velocities = generate_starting_velocities(num_particles, 1.f, 1.5f);
