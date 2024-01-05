@@ -1,7 +1,6 @@
 __kernel void compute_forces(__global float4* forces,
     __global float4* curr_positions,
-    __local float4* positions_cache,
-    __local float4* forces_cache)
+    __local float4* positions_cache)
 {
     //FLOPS : 2 * numWorkItems * num_particles * 12
 
@@ -97,7 +96,7 @@ __kernel void compute_velocities(__global float4* oldForces,
     //update velocity.
     float acc = time_step * 0.5f / my_mass;
 
-    my_velocity = my_velocity + acc *(myOldForce + myNewForce);
+    my_velocity = my_velocity + acc * (myOldForce + myNewForce);
 
     my_velocity.s3 = my_mass;
     current_velocities[gid] = my_velocity;
