@@ -27,6 +27,9 @@
     <ClCompile Include="VelocityVerletIntegrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SingleGPUVelocityVerlet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IAlgorithmStrategy.hpp">
@@ -44,8 +47,14 @@
     <ClInclude Include="IRenderStrategy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SingleGPUVelocityVerlet.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="saxmono.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="velocity_verlet.cl" />
   </ItemGroup>
 </Project>
