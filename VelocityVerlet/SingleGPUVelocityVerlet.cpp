@@ -244,7 +244,7 @@ bool SingleGPUVelocityVerlet::setup_kernels()
     {
         m_force_kernel = cl::Kernel(m_program, FORCE_KERNEL_NAME.data());
 
-        m_force_kernel.setArg(0, m_forces_buffers[0]);
+        m_force_kernel.setArg(0, m_forces_buffers[m_front_buffer_idx]);
         m_force_kernel.setArg(1, m_positions_buffers[m_front_buffer_idx]);
         m_force_kernel.setArg(2, WORKGROUP_SIZE * sizeof(cl_float4), NULL);
 
@@ -280,6 +280,8 @@ bool SingleGPUVelocityVerlet::update_kernel_arguments()
     {
         std::swap(m_front_buffer_idx, m_back_buffer_idx);
 
+        m_force_kernel.setArg(0, m_forces_buffers[m_front_buffer_idx]);
+
         m_positions_kernel.setArg(1, m_positions_buffers[m_front_buffer_idx]);
         m_positions_kernel.setArg(2, m_positions_buffers[m_back_buffer_idx]);
 
@@ -305,8 +307,6 @@ bool SingleGPUVelocityVerlet::queue_commands()
 
         if (m_command_queue.has_value())
         {
-            m_force_kernel.setArg(0, m_forces_buffers[0]);
-
             // computes forces
             m_command_queue->enqueueNDRangeKernel(m_force_kernel,
                 cl::NullRange,
@@ -324,7 +324,7 @@ bool SingleGPUVelocityVerlet::queue_commands()
                 &pos_event[0]);
 
             // we don't wanna override the newly computed forces so we switch buffers
-            m_force_kernel.setArg(0, m_forces_buffers[1]);
+            m_force_kernel.setArg(0, m_forces_buffers[m_back_buffer_idx]);
 
             // set the buffer that contains the newly updated positions
             m_force_kernel.setArg(1, m_positions_buffers[m_back_buffer_idx]);
