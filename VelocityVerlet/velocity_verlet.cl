@@ -8,7 +8,6 @@ __kernel void compute_forces(__global float4* forces,
     uint lid = get_local_id(0);
     uint local_size = get_local_size(0);
     uint num_particles = get_global_size(0);
-    uint other_idx = 0;
 
     //read position and mass for this particle where 4th component is the mass.
     float4 my_pos = curr_positions[gid];
