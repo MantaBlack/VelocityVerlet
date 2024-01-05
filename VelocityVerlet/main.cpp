@@ -99,8 +99,8 @@ int main()
     const std::size_t num_particles = 50000;
     const float time_step = .1f;
 
-    std::vector<sf::Vector3f> positions = generate_starting_positions(num_particles, 0.f, 900.f);
-    std::vector<sf::Vector3f> velocities = generate_starting_velocities(num_particles, 1.f, 1.5f);
+    std::vector<sf::Vector3f> positions = generate_starting_positions(num_particles, 100.f, 900.f);
+    std::vector<sf::Vector3f> velocities = generate_starting_velocities(num_particles, 1.f, 10.f);
     std::vector<float> masses = generate_masses(num_particles, 1000.f, 5000.f);
 
     sf::Font font;

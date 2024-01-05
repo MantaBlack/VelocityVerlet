@@ -25,13 +25,15 @@ __kernel void compute_forces(__global float4* forces,
         force += (gravity * diff);
     }
 
+    // since atomics for floats is not supported, we need to calculate
+    // the opposite forces as follows
     for (uint other = gid; other > 0; --other)
     {
         float4 other_position = curr_positions[other];
 
-        float4 diff = my_pos - other_position;
+        float4 diff           = my_pos - other_position;
         float square_distance = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
-        float gravity = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
+        float gravity         = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
 
         force = select(force, force - (gravity * diff), (uint4)other < gid);
     }
@@ -100,33 +102,4 @@ __kernel void compute_velocities(__global float4* oldForces,
 
     my_velocity.s3 = my_mass;
     current_velocities[gid] = my_velocity;
-}
-
-
-
-__kernel void compute_forces_no_cache(__global float4* forces,
-    __global float4* curr_positions)
-{
-    uint gid          = get_global_id(0);
-    uint lid          = get_local_id(0);
-    uint local_size    = get_local_size(0);
-    uint num_particles = get_global_size(0);
-
-    //read position and mass for this particle where 4th component is the mass.
-    float4 my_pos = curr_positions[gid];
-    float4 force = (float4) 0.0f;
-
-    //for all particles
-    for (uint q = 0; q < num_particles; ++q)
-    {
-        float4 other_position = curr_positions[q];
-
-        float4 diff           = other_position - my_pos;
-        float square_distance = diff.s0 * diff.s0 + diff.s1 * diff.s1 + diff.s2 * diff.s2;
-        float gravity         = my_pos.s3 * other_position.s3 / (sqrt(square_distance) * square_distance);
-        force                 = select(force + (gravity * diff), force, (uint4) gid == q);
-    }
-
-    //write forces so that we can use it later to update positions after syncing.
-    forces[gid] = force;
 }
