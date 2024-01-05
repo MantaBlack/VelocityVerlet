@@ -25,7 +25,7 @@ __kernel void compute_forces(__global float4* forces,
 
     // since atomics for floats is not supported, we need to calculate
     // the opposite forces as follows
-    for (uint other = gid; other > 0; --other)
+    for (int other = gid; other >= 0; --other)
     {
         float4 other_position = curr_positions[other];
 
